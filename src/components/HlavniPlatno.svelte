@@ -3,6 +3,8 @@
 	import { createRainbow } from "rainbow-color";
 	import { rgbHex } from "color-map";
 	import { onMount } from "svelte";
+	import type { Blok } from "../lib/types";
+	import { BubbleSort } from "../lib/serazovace/BubbleSort";
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D;
@@ -20,39 +22,93 @@
 		ctx.scale(DPR, DPR);
 	};
 
+	const vytvorBlocky = (pocetBloku: number, vyskoveSkoky: number): Blok[] => {
+		const duha = createRainbow(pocetBloku);
+
+		return Array(pocetBloku)
+			.fill(null)
+			.map((_, poradi) => {
+				return {
+					vyska: poradi * vyskoveSkoky,
+					poradi,
+					barva: rgbHex(duha[poradi]),
+				};
+			});
+	};
+
+	const vykresliBloky = (bloky: Blok[]) => {
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+		let i = 0;
+		for (const { vyska, barva } of bloky) {
+			ctx.fillStyle = barva;
+
+			const x = i * horizontalniSkok;
+			const y = canvas.height - vyska;
+
+			const sirka = horizontalniSkok;
+
+			ctx.fillRect(x, y, sirka, vyska);
+
+			i++;
+		}
+	};
+
+	export let horizontalniSkok = 5;
+
 	onMount(() => {
 		ctx = canvas.getContext("2d");
 
 		kalibrovatPlatno();
 
-		const krok = 5;
-		const pocetBloku = Math.floor(canvas.width / krok);
-		const skok = Math.floor(canvas.height / pocetBloku);
+		main();
+	});
 
-		const duha = createRainbow(pocetBloku);
+	const main = () => {
+		kalibrovatPlatno();
 
-		const bloky = Array(pocetBloku)
-			.fill(null)
-			.map((_, index) => {
-				return {
-					vyska: index * skok,
-					index,
-					barva: rgbHex(duha[index]),
-				};
-			});
+		const pocetBloku = Math.floor(canvas.width / horizontalniSkok);
+		const vyskovySkok = Math.floor(canvas.height / pocetBloku);
+
+		const bloky = vytvorBlocky(pocetBloku, vyskovySkok);
 
 		const zamichaneBloky = zamichejList(bloky);
 
-		let i = 0;
-		for (const { vyska, index, barva } of zamichaneBloky) {
-			ctx.fillStyle = barva;
-			ctx.fillRect(i * krok, canvas.height - vyska, krok, vyska);
-			i++;
-		}
-	});
+		vykresliBloky(zamichaneBloky);
+
+		const serazovac = new BubbleSort().serad(zamichaneBloky);
+
+		const krok = () => {
+			let preskocene: Blok[];
+			for (let i = 0; i < 200; i++) {
+				const { value } = serazovac.next();
+				if (value) {
+					preskocene = value;
+				}
+			}
+
+			let { value, done } = serazovac.next();
+			if (done && !preskocene) {
+				console.log({ value });
+				return;
+			} else if (done && preskocene) {
+				value = preskocene;
+			}
+
+			if (!value) {
+				console.log("CHYBA");
+				return;
+			}
+			console.log({ value });
+			vykresliBloky(value);
+			requestAnimationFrame(krok);
+		};
+
+		requestAnimationFrame(krok);
+	};
 </script>
 
-<svelte:window on:resize={() => kalibrovatPlatno()} />
+<svelte:window on:resize={() => main()} />
 <div class="w-full h-full overflow-hidden">
 	<canvas bind:this={canvas} />
 </div>
