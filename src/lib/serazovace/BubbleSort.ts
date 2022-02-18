@@ -1,8 +1,10 @@
-import type { Blok } from "../types";
+import type { Blok, SeraditelnyObjekt } from "../types";
 import { ZakladniSerazovac } from "./ZakladniSerazovac";
 
-export class BubbleSort extends ZakladniSerazovac {
-	*serad(list: Blok[]) {
+export class BubbleSort implements ZakladniSerazovac {
+	*serad<Objekt extends SeraditelnyObjekt>(
+		list: Objekt[]
+	): Generator<Objekt[], Objekt[]> {
 		list = [...list];
 
 		let index = 0;
@@ -13,9 +15,12 @@ export class BubbleSort extends ZakladniSerazovac {
 			const dalsiIndex = index + 1;
 			const dalsiBlok = list[dalsiIndex];
 			if (!dalsiBlok) {
+				// pokud za posledni kolo nebyla nalezena chyba v poradi, list je serazeny
 				if (nalezenaChyba === false) {
 					jeSerazeno = true;
-				} else {
+				}
+				// pokud za posledni kolo byla chyba, pujdeme na dalsi kolo
+				else {
 					index = 0;
 					nalezenaChyba = false;
 				}
@@ -38,6 +43,6 @@ export class BubbleSort extends ZakladniSerazovac {
 		}
 
 		yield list;
-		return;
+		return list;
 	}
 }

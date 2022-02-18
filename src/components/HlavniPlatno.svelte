@@ -5,6 +5,7 @@
 	import { onMount } from "svelte";
 	import type { Blok } from "../lib/types";
 	import { BubbleSort } from "../lib/serazovace/BubbleSort";
+	import { QuickSort } from "../lib/serazovace/QuickSort";
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D;
@@ -32,6 +33,7 @@
 					vyska: poradi * vyskoveSkoky,
 					poradi,
 					barva: rgbHex(duha[poradi]),
+					zvyrazneny: false,
 				};
 			});
 	};
@@ -40,9 +42,10 @@
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		let i = 0;
-		for (const { vyska, barva } of bloky) {
-			ctx.fillStyle = barva;
+		for (let { vyska, barva, zvyrazneny } of bloky) {
+			ctx.fillStyle = zvyrazneny ? "#ff007f" : barva;
 
+			vyska = zvyrazneny ? canvas.height : vyska;
 			const x = i * horizontalniSkok;
 			const y = canvas.height - vyska;
 
@@ -54,7 +57,7 @@
 		}
 	};
 
-	export let horizontalniSkok = 5;
+	export let horizontalniSkok = 2;
 
 	onMount(() => {
 		ctx = canvas.getContext("2d");
@@ -76,20 +79,21 @@
 
 		vykresliBloky(zamichaneBloky);
 
-		const serazovac = new BubbleSort().serad(zamichaneBloky);
+		const serazovac = new QuickSort().serad(zamichaneBloky);
 
 		const krok = () => {
 			let preskocene: Blok[];
-			for (let i = 0; i < 200; i++) {
+			/*for (let i = 0; i < 1; i++) {
 				const { value } = serazovac.next();
 				if (value) {
 					preskocene = value;
 				}
-			}
+			}*/
 
 			let { value, done } = serazovac.next();
 			if (done && !preskocene) {
-				console.log({ value });
+				console.log(`HOTOVO`);
+				//console.log({ value });
 				return;
 			} else if (done && preskocene) {
 				value = preskocene;
