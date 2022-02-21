@@ -6,6 +6,7 @@
 	import type { Blok } from "../lib/types";
 	import { BubbleSort } from "../lib/serazovace/BubbleSort";
 	import { QuickSort } from "../lib/serazovace/QuickSort";
+	import { RadixSort } from "../lib/serazovace/RadixSort";
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D;
@@ -57,7 +58,7 @@
 		}
 	};
 
-	export let horizontalniSkok = 2;
+	export let horizontalniSkok = 3;
 
 	onMount(() => {
 		ctx = canvas.getContext("2d");
@@ -79,16 +80,16 @@
 
 		vykresliBloky(zamichaneBloky);
 
-		const serazovac = new QuickSort().serad(zamichaneBloky);
+		const serazovac = new RadixSort().serad(zamichaneBloky);
 
 		const krok = () => {
 			let preskocene: Blok[];
-			/*for (let i = 0; i < 1; i++) {
+			for (let i = 0; i < 5; i++) {
 				const { value } = serazovac.next();
 				if (value) {
 					preskocene = value;
 				}
-			}*/
+			}
 
 			let { value, done } = serazovac.next();
 			if (done && !preskocene) {
