@@ -7,5 +7,6 @@ export default defineConfig({
   css: {
     postcss,
   },
+  base: '/serazovac/',
   plugins: [svelte()]
 })

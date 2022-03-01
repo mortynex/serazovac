@@ -1,5 +1,6 @@
 {
   "name": "serazovac",
+  "homepage": "https://mortynex.github.io/serazovac",
   "author": {
     "name": "Martin Polťák"
   },
@@ -10,7 +11,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "deploy": "npm run build & gh-pages -d dist"
+    "predeploy" :"npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
