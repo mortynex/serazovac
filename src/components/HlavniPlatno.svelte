@@ -7,6 +7,7 @@
 	import { BubbleSort } from "../lib/serazovace/BubbleSort";
 	import { QuickSort } from "../lib/serazovace/QuickSort";
 	import { RadixSort } from "../lib/serazovace/RadixSort";
+	import { SerazovaciPlatno } from "../lib/serazovac";
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D;
@@ -61,11 +62,9 @@
 	export let horizontalniSkok = 3;
 
 	onMount(() => {
-		ctx = canvas.getContext("2d");
+		const platno = new SerazovaciPlatno(canvas);
 
-		kalibrovatPlatno();
-
-		main();
+		platno.zacni();
 	});
 
 	const main = () => {
