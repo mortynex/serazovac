@@ -17,8 +17,7 @@ export class SerazovaciPlatno {
 
 		this.kalibruj();
 
-		this.vygenerujBloky();
-		this.zamichejBloky();
+		this.udelejBloky();
 
 		this.vykresli();
 	}
@@ -136,6 +135,7 @@ export class SerazovaciPlatno {
 	private aktualniSerazovac: Generator;
 
 	pokracuj() {
+		this.serazuje = true;
 		const sekvence = () => {
 			if (this.serazuje === false) {
 				return;
@@ -147,6 +147,13 @@ export class SerazovaciPlatno {
 		};
 
 		requestAnimationFrame(sekvence);
+	}
+
+	udelejBloky() {
+		this.vygenerujBloky();
+		this.zamichejBloky();
+
+		this.aktualniSerazovac = this.algoritmus.serad(this.bloky);
 	}
 
 	zacni() {

@@ -12,107 +12,25 @@
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D;
 
-	const kalibrovatPlatno = () => {
-		const { width: sirkaPlatna, height: vyskaPlatna } = ziskejVelikost(
-			canvas.parentElement
-		);
-
-		const DPR = window.devicePixelRatio || 1;
-
-		canvas.width = Math.floor(sirkaPlatna) * DPR;
-		canvas.height = Math.floor(vyskaPlatna) * DPR;
-
-		ctx.scale(DPR, DPR);
-	};
-
-	const vytvorBlocky = (pocetBloku: number, vyskoveSkoky: number): Blok[] => {
-		const duha = createRainbow(pocetBloku);
-
-		return Array(pocetBloku)
-			.fill(null)
-			.map((_, poradi) => {
-				return {
-					vyska: poradi * vyskoveSkoky,
-					poradi,
-					barva: rgbHex(duha[poradi]),
-					zvyrazneny: false,
-				};
-			});
-	};
-
-	const vykresliBloky = (bloky: Blok[]) => {
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-		let i = 0;
-		for (let { vyska, barva, zvyrazneny } of bloky) {
-			ctx.fillStyle = zvyrazneny ? "#ff007f" : barva;
-
-			vyska = zvyrazneny ? canvas.height : vyska;
-			const x = i * horizontalniSkok;
-			const y = canvas.height - vyska;
-
-			const sirka = horizontalniSkok;
-
-			ctx.fillRect(x, y, sirka, vyska);
-
-			i++;
-		}
-	};
-
 	export let horizontalniSkok = 3;
 
-	onMount(() => {
-		const platno = new SerazovaciPlatno(canvas);
+	export let platno: SerazovaciPlatno;
 
-		platno.zacni();
+	onMount(() => {
+		platno = new SerazovaciPlatno(canvas);
+
+		//platno.zacni();
 	});
 
-	const main = () => {
-		kalibrovatPlatno();
-
-		const pocetBloku = Math.floor(canvas.width / horizontalniSkok);
-		const vyskovySkok = Math.floor(canvas.height / pocetBloku);
-
-		const bloky = vytvorBlocky(pocetBloku, vyskovySkok);
-
-		const zamichaneBloky = zamichejList(bloky);
-
-		vykresliBloky(zamichaneBloky);
-
-		const serazovac = new RadixSort().serad(zamichaneBloky);
-
-		const krok = () => {
-			let preskocene: Blok[];
-			for (let i = 0; i < 5; i++) {
-				const { value } = serazovac.next();
-				if (value) {
-					preskocene = value;
-				}
-			}
-
-			let { value, done } = serazovac.next();
-			if (done && !preskocene) {
-				console.log(`HOTOVO`);
-				//console.log({ value });
-				return;
-			} else if (done && preskocene) {
-				value = preskocene;
-			}
-
-			if (!value) {
-				console.log("CHYBA");
-				return;
-			}
-			console.log({ value });
-			vykresliBloky(value);
-			requestAnimationFrame(krok);
-		};
-
-		requestAnimationFrame(krok);
+	const zmenaSirky = () => {
+		platno.resetuj();
+		platno.kalibruj();
+		platno.vygenerujBloky();
+		platno.zamichejBloky();
 	};
 </script>
 
-<svelte:window on:resize={() => main()} />
+<svelte:window on:resize={zmenaSirky} />
 <div class="w-full h-full overflow-hidden">
 	<canvas bind:this={canvas} />
 </div>
