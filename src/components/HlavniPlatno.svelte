@@ -2,7 +2,7 @@
 	import { zamichejList, ziskejVelikost } from "../lib/util";
 	import { createRainbow } from "rainbow-color";
 	import { rgbHex } from "color-map";
-	import { onMount } from "svelte";
+	import { createEventDispatcher, onMount } from "svelte";
 	import type { Blok } from "../lib/types";
 	import { BubbleSort } from "../lib/serazovace/BubbleSort";
 	import { QuickSort } from "../lib/serazovace/QuickSort";
@@ -16,10 +16,13 @@
 
 	export let platno: SerazovaciPlatno;
 
+	const dispecer = createEventDispatcher();
+
 	onMount(() => {
 		platno = new SerazovaciPlatno(canvas);
 
-		//platno.zacni();
+		dispecer("nacteni")
+	
 	});
 
 	const zmenaSirky = () => {

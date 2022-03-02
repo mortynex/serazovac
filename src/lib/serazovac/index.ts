@@ -6,9 +6,14 @@ import { ZakladniSerazovac } from "../serazovace/ZakladniSerazovac";
 import { Blok } from "../types";
 import { zamichejList, ziskejVelikost } from "../util";
 
+const algoritmy = {
+	QuickSort: new QuickSort(),
+	BubbleSort: new BubbleSort(),
+};
+
 export class SerazovaciPlatno {
 	private ctx: CanvasRenderingContext2D;
-	private bloky: Blok[];
+	private bloky: Blok[] = [];
 
 	private sirkaBloku: number = 5;
 
@@ -17,6 +22,7 @@ export class SerazovaciPlatno {
 
 		this.kalibruj();
 
+		this.zmenAlgortimus("BubbleSort");
 		this.udelejBloky();
 
 		this.vykresli();
@@ -87,8 +93,17 @@ export class SerazovaciPlatno {
 			i++;
 		}
 	}
+	private listAlgoritmu = algoritmy;
 
-	private algoritmus: ZakladniSerazovac = new QuickSort();
+	get algoritmy() {
+		return Object.keys(this.listAlgoritmu);
+	}
+
+	private aktualniAlgoritmus: string;
+
+	get vybranyAlgoritmus() {
+		return this.aktualniAlgoritmus;
+	}
 	private rychlost: number = 1;
 
 	private serazuj(serazovac: Generator, dalsiSekvence: () => any) {
@@ -106,7 +121,6 @@ export class SerazovaciPlatno {
 				hotovo = true;
 			}
 		}
-
 		if (hotovo) {
 			return false;
 		}
@@ -114,16 +128,22 @@ export class SerazovaciPlatno {
 		this.bloky = noveBloky;
 
 		this.vykresli();
-
 		dalsiSekvence();
 	}
 
 	public serazuje: boolean = false;
 
-	zmenAlgortimus() {}
+	zmenAlgortimus(algoritmus: keyof typeof algoritmy) {
+		console.log({ algoritmus });
+		this.aktualniAlgoritmus = algoritmus;
+
+		this.updatujSerazovac();
+	}
 
 	zastav() {
 		this.serazuje = false;
+
+		this.vycistiBloky();
 	}
 
 	resetuj() {
@@ -136,6 +156,7 @@ export class SerazovaciPlatno {
 
 	pokracuj() {
 		this.serazuje = true;
+		console.log("hej");
 		const sekvence = () => {
 			if (this.serazuje === false) {
 				return;
@@ -149,19 +170,31 @@ export class SerazovaciPlatno {
 		requestAnimationFrame(sekvence);
 	}
 
+	private updatujSerazovac() {
+		this.vycistiBloky();
+
+		this.aktualniSerazovac = this.listAlgoritmu[this.aktualniAlgoritmus].serad(
+			this.bloky
+		);
+	}
+
+	private vycistiBloky() {
+		console.log("cistim");
+		this.bloky = this.bloky.map<Blok>((blok) => {
+			return {
+				...blok,
+				zvyrazneny: false,
+			};
+		});
+
+		this.vykresli();
+	}
+
 	udelejBloky() {
 		this.vygenerujBloky();
 		this.zamichejBloky();
 
-		this.aktualniSerazovac = this.algoritmus.serad(this.bloky);
-	}
-
-	zacni() {
-		this.serazuje = true;
-
-		this.aktualniSerazovac = this.algoritmus.serad(this.bloky);
-
-		this.pokracuj();
+		this.updatujSerazovac();
 	}
 
 	zmenRychlost() {}
