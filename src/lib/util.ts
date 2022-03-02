@@ -35,3 +35,5 @@ export function* obalGeneratoru(gen: Generator) {
 export const zamen = (list: any[], prvniIndex: number, druhyIndex: number) => {
 	[list[prvniIndex], list[druhyIndex]] = [list[druhyIndex], list[prvniIndex]];
 };
+
+export const PLATNO_CONTEXT = "platnoContext___";

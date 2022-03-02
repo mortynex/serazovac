@@ -5,19 +5,20 @@ import { QuickSort } from "../serazovace/QuickSort";
 import { ZakladniSerazovac } from "../serazovace/ZakladniSerazovac";
 import { Blok } from "../types";
 import { zamichejList, ziskejVelikost } from "../util";
-
 const algoritmy = {
 	QuickSort: new QuickSort(),
 	BubbleSort: new BubbleSort(),
 };
 
-export class SerazovaciPlatno {
+export class SerazovaciPlatno extends EventTarget {
 	private ctx: CanvasRenderingContext2D;
 	private bloky: Blok[] = [];
 
 	private sirkaBloku: number = 5;
 
 	constructor(private canvas: HTMLCanvasElement) {
+		super();
+
 		this.ctx = canvas.getContext("2d");
 
 		this.kalibruj();
@@ -101,16 +102,15 @@ export class SerazovaciPlatno {
 
 	private aktualniAlgoritmus: string;
 
-	get vybranyAlgoritmus() {
+	get algoritmus() {
 		return this.aktualniAlgoritmus;
 	}
-	private rychlost: number = 1;
 
 	private serazuj(serazovac: Generator, dalsiSekvence: () => any) {
 		let hotovo = false;
 		let noveBloky;
 
-		for (let i = 0; i < this.rychlost; i++) {
+		for (let i = 0; i < this.aktualniRychlost; i++) {
 			const { value, done } = serazovac.next();
 
 			if (value) {
@@ -140,14 +140,26 @@ export class SerazovaciPlatno {
 		this.updatujSerazovac();
 	}
 
-	zastav() {
+	private zastavSerazovani() {
+		console.log("Zastavuju");
 		this.serazuje = false;
+		this.dispatchEvent(new Event("zastaveni"));
+	}
+
+	private pokracujVSerazovani() {
+		console.log("Pokracuju");
+		this.serazuje = true;
+		this.dispatchEvent(new Event("pokracovani"));
+	}
+
+	zastav() {
+		this.zastavSerazovani();
 
 		this.vycistiBloky();
 	}
 
 	resetuj() {
-		this.zamichejBloky();
+		this.udelejBloky();
 
 		this.zastav();
 	}
@@ -155,8 +167,8 @@ export class SerazovaciPlatno {
 	private aktualniSerazovac: Generator;
 
 	pokracuj() {
-		this.serazuje = true;
-		console.log("hej");
+		this.pokracujVSerazovani();
+
 		const sekvence = () => {
 			if (this.serazuje === false) {
 				return;
@@ -179,7 +191,6 @@ export class SerazovaciPlatno {
 	}
 
 	private vycistiBloky() {
-		console.log("cistim");
 		this.bloky = this.bloky.map<Blok>((blok) => {
 			return {
 				...blok,
@@ -197,7 +208,18 @@ export class SerazovaciPlatno {
 		this.updatujSerazovac();
 	}
 
-	zmenRychlost() {}
+	private aktualniRychlost: number = 2;
 
-	zmenSirkuBloku() {}
+	get rychlost() {
+		return this.aktualniRychlost;
+	}
+
+	zmenRychlost(novaRychlost: number) {
+		this.aktualniRychlost = novaRychlost;
+	}
+
+	zmenSirkuBloku(novaSirka: number) {
+		this.sirkaBloku = novaSirka;
+		this.udelejBloky();
+	}
 }
