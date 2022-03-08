@@ -1,5 +1,6 @@
 import { rgbHex } from "color-map";
 import { createRainbow } from "rainbow-color";
+import { Dispecer } from "../dispecer";
 import { BubbleSort } from "../serazovace/BubbleSort";
 import { QuickSort } from "../serazovace/QuickSort";
 import { ZakladniSerazovac } from "../serazovace/ZakladniSerazovac";
@@ -10,7 +11,15 @@ const algoritmy = {
 	BubbleSort: new BubbleSort(),
 };
 
-export class SerazovaciPlatno extends EventTarget {
+export class SerazovaciPlatno extends Dispecer<{
+	zastaveni: [];
+	pokracovani: [];
+	zmenaAlgoritmu: [string];
+	zmenaRychlosti: [number];
+	zmenaSirkuBloku: [number];
+	resetovani: [];
+	pripraven: [];
+}> {
 	private ctx: CanvasRenderingContext2D;
 	private bloky: Blok[] = [];
 
@@ -27,6 +36,8 @@ export class SerazovaciPlatno extends EventTarget {
 		this.udelejBloky();
 
 		this.vykresli();
+
+		this.rozesli("pripraven");
 	}
 
 	kalibruj() {
@@ -134,22 +145,23 @@ export class SerazovaciPlatno extends EventTarget {
 	public serazuje: boolean = false;
 
 	zmenAlgortimus(algoritmus: keyof typeof algoritmy) {
-		console.log({ algoritmus });
 		this.aktualniAlgoritmus = algoritmus;
 
 		this.updatujSerazovac();
+
+		this.rozesli("zmenaAlgoritmu", algoritmus);
 	}
 
 	private zastavSerazovani() {
-		console.log("Zastavuju");
 		this.serazuje = false;
-		this.dispatchEvent(new Event("zastaveni"));
+
+		this.rozesli("zastaveni");
 	}
 
 	private pokracujVSerazovani() {
-		console.log("Pokracuju");
 		this.serazuje = true;
-		this.dispatchEvent(new Event("pokracovani"));
+
+		this.rozesli("pokracovani");
 	}
 
 	zastav() {
@@ -216,10 +228,14 @@ export class SerazovaciPlatno extends EventTarget {
 
 	zmenRychlost(novaRychlost: number) {
 		this.aktualniRychlost = novaRychlost;
+
+		this.rozesli("zmenaRychlosti", novaRychlost);
 	}
 
 	zmenSirkuBloku(novaSirka: number) {
 		this.sirkaBloku = novaSirka;
 		this.udelejBloky();
+
+		this.rozesli("zmenaSirkuBloku", novaSirka);
 	}
 }
