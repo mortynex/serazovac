@@ -27,7 +27,7 @@
 		<ControlPanel />
 	</div>
 	<div class="w-full flex-grow">
-		<HlavniPlatno on:nacteni={nacteniPlatna} bind:platno horizontalniSkok={3} />
+		<HlavniPlatno on:nacteni={nacteniPlatna} bind:platno />
 	</div>
 	<div class="w-full h-[4.5em] border-t-2 border-gray-200">
 		<OptionsPanel />

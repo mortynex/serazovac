@@ -12,8 +12,6 @@
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D;
 
-	export let horizontalniSkok = 3;
-
 	export let platno: SerazovaciPlatno;
 
 	const dispecer = createEventDispatcher();
@@ -21,15 +19,12 @@
 	onMount(() => {
 		platno = new SerazovaciPlatno(canvas);
 
-		dispecer("nacteni")
-	
+		dispecer("nacteni");
 	});
 
 	const zmenaSirky = () => {
-		platno.resetuj();
 		platno.kalibruj();
-		platno.vygenerujBloky();
-		platno.zamichejBloky();
+		platno.resetuj();
 	};
 </script>
 

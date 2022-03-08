@@ -88,6 +88,7 @@ export class SerazovaciPlatno extends Dispecer<{
 	}
 
 	vykresli() {
+		console.log("vykresluju");
 		this.ctx.clearRect(0, 0, this.sirka, this.vyska);
 
 		let i = 0;

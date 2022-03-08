@@ -20,7 +20,9 @@
 	});
 
 	const ziskejVychoziHodnoty = () => {
+		algoritmy = platno.algoritmy;
 		vybranyAlgoritmus = platno.algoritmus;
+
 		vybranaRychlost = platno.rychlost;
 	};
 

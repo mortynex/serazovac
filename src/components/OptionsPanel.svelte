@@ -16,11 +16,11 @@
 	priNacteniPlatna((novePlatno: SerazovaciPlatno) => {
 		platno = novePlatno;
 
-		platno.addEventListener("zastaveni", () => {
+		platno.poslouchej("zastaveni", () => {
 			serazuje = false;
 		});
 
-		platno.addEventListener("pokracovani", () => {
+		platno.poslouchej("pokracovani", () => {
 			serazuje = true;
 		});
 	});
