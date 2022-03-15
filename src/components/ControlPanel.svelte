@@ -10,6 +10,7 @@
 	let vybranyAlgoritmus: string;
 	let vybranaRychlost: number;
 	let vybranaSirka: number;
+	let serazuje = false;
 
 	const priNacteniPlatna = getContext(PLATNO_CONTEXT) as any;
 
@@ -17,6 +18,14 @@
 		platno = novePlatno;
 
 		ziskejVychoziHodnoty();
+
+		platno.poslouchej("zastaveni", () => {
+			serazuje = false;
+		});
+
+		platno.poslouchej("pokracovani", () => {
+			serazuje = true;
+		});
 	});
 
 	const ziskejVychoziHodnoty = () => {
@@ -48,7 +57,12 @@
 	<div class=" h-10 flex row gap-2">
 		<div>
 			<label for="">Algoritmus</label>
-			<select name="algoritmy" bind:value={vybranyAlgoritmus} on:change={zmenaAlgoritmu}>
+			<select
+				name="algoritmy"
+				disabled={serazuje}
+				bind:value={vybranyAlgoritmus}
+				on:change={zmenaAlgoritmu}
+			>
 				{#each algoritmy as algoritmus}
 					<option value={algoritmus}>{algoritmus}</option>
 				{/each}
@@ -71,6 +85,7 @@
 				type="range"
 				max="40"
 				min="2"
+				disabled={serazuje}
 				on:change={zmenaSirky}
 				bind:value={vybranaSirka}
 			/>

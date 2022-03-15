@@ -133,13 +133,15 @@ export class SerazovaciPlatno extends Dispecer<{
 				hotovo = true;
 			}
 		}
-		if (hotovo) {
-			return false;
-		}
 
 		this.bloky = noveBloky;
 
 		this.vykresli();
+
+		if (hotovo) {
+			return false;
+		}
+
 		dalsiSekvence();
 	}
 
@@ -235,6 +237,7 @@ export class SerazovaciPlatno extends Dispecer<{
 
 	zmenSirkuBloku(novaSirka: number) {
 		this.sirkaBloku = novaSirka;
+		this.zastavSerazovani();
 		this.udelejBloky();
 
 		this.rozesli("zmenaSirkuBloku", novaSirka);

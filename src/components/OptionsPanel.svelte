@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { SerazovaciPlatno } from "../lib/serazovac";
-
 	import { getContext } from "svelte";
 
 	import PozastavIkona from "../assets/pozastav_ikona.svg";
 	import ZacniIkona from "../assets/zacni_ikona.svg";
+	import ResetujIkona from "../assets/resetuj_ikona.svg";
+
+	import { SerazovaciPlatno } from "../lib/serazovac";
 	import { PLATNO_CONTEXT } from "../lib/util";
 
 	let serazuje = false;
@@ -32,6 +33,10 @@
 	const pozastavPrehravani = () => {
 		platno.pokracuj();
 	};
+
+	const resetujPlatno = () => {
+		platno.resetuj();
+	};
 </script>
 
 <div class="w-full h-full flex flex-row justify-between items-center p-8">
@@ -43,5 +48,13 @@
 			<img src={ZacniIkona} alt="" class="cursor-pointer" on:click={pozastavPrehravani} />
 		{/if}
 	</div>
-	<div class="bg-gray-200 h-10" />
+	<div class="h-10 flex row gap-2">
+		<img
+			src={ResetujIkona}
+			alt=""
+			on:click={resetujPlatno}
+			style={serazuje ? "filter: contrast(0.1)" : ""}
+			class={serazuje ? "cursor-default" : "cursor-pointer"}
+		/>
+	</div>
 </div>
