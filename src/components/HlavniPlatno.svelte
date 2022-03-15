@@ -19,7 +19,7 @@
 	onMount(() => {
 		platno = new SerazovaciPlatno(canvas);
 
-		dispecer("nacteni");
+		dispecer("nacteni", platno);
 	});
 
 	const zmenaSirky = () => {

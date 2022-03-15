@@ -3,12 +3,15 @@ import { createRainbow } from "rainbow-color";
 import { Dispecer } from "../dispecer";
 import { BubbleSort } from "../serazovace/BubbleSort";
 import { QuickSort } from "../serazovace/QuickSort";
+import { RadixSort } from "../serazovace/RadixSort";
+import { ShellSort } from "../serazovace/ShellSort";
 import { ZakladniSerazovac } from "../serazovace/ZakladniSerazovac";
 import { Blok } from "../types";
 import { zamichejList, ziskejVelikost } from "../util";
 const algoritmy = {
 	QuickSort: new QuickSort(),
 	BubbleSort: new BubbleSort(),
+	ShellSort: new ShellSort(),
 };
 
 export class SerazovaciPlatno extends Dispecer<{
@@ -88,12 +91,11 @@ export class SerazovaciPlatno extends Dispecer<{
 	}
 
 	vykresli() {
-		console.log("vykresluju");
 		this.ctx.clearRect(0, 0, this.sirka, this.vyska);
 
 		let i = 0;
 		for (let { vyska, barva, zvyrazneny } of this.bloky) {
-			this.ctx.fillStyle = zvyrazneny ? "#ff007f" : barva;
+			this.ctx.fillStyle = zvyrazneny ? "#000000" : barva;
 
 			vyska = zvyrazneny ? this.vyska : vyska;
 			const x = i * this.sirkaBloku;
@@ -102,7 +104,6 @@ export class SerazovaciPlatno extends Dispecer<{
 			const sirka = this.sirkaBloku;
 
 			this.ctx.fillRect(x, y, sirka, vyska);
-
 			i++;
 		}
 	}
@@ -134,11 +135,14 @@ export class SerazovaciPlatno extends Dispecer<{
 			}
 		}
 
-		this.bloky = noveBloky;
-
-		this.vykresli();
+		if (noveBloky) {
+			this.bloky = noveBloky;
+			this.vykresli();
+		}
 
 		if (hotovo) {
+			this.zastavSerazovani();
+
 			return false;
 		}
 
@@ -183,7 +187,7 @@ export class SerazovaciPlatno extends Dispecer<{
 
 	pokracuj() {
 		this.pokracujVSerazovani();
-
+		console.log(this.serazuje);
 		const sekvence = () => {
 			if (this.serazuje === false) {
 				return;

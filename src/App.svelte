@@ -9,9 +9,9 @@
 
 	let platno: SerazovaciPlatno;
 
-	const nacteniPlatna = () => {
+	const nacteniPlatna = (e) => {
 		posluchaci.forEach((posluchac) => {
-			posluchac(platno);
+			posluchac(e.detail);
 		});
 	};
 	type Posluchac = (platno: SerazovaciPlatno) => any;
