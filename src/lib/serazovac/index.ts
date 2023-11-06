@@ -50,8 +50,8 @@ export class SerazovaciPlatno extends Dispecer<{
 
 		const DPR = window.devicePixelRatio || 1;
 
-		this.canvas.width = Math.floor(sirkaPlatna) * DPR;
-		this.canvas.height = Math.floor(vyskaPlatna) * DPR;
+		this.canvas.width = sirkaPlatna;
+		this.canvas.height = vyskaPlatna;
 
 		this.ctx.scale(DPR, DPR);
 	}

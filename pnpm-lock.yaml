@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@sveltejs/vite-plugin-svelte': ^1.0.0-next.30
@@ -27,9 +27,9 @@ devDependencies:
   gh-pages: 3.2.3
   postcss: 8.4.6
   svelte: 3.46.4
-  svelte-check: 2.4.5_postcss@8.4.6+svelte@3.46.4
-  svelte-preprocess: 4.10.3_88b359da5cac6d8f6ee1bbb7080a3fa9
-  tailwindcss: 3.0.23_autoprefixer@10.4.2
+  svelte-check: 2.4.5_7jwy3d7cmqdltluu6ileoi6vt4
+  svelte-preprocess: 4.10.3_rczvtws4vrwy63xbxo3qqcr7ve
+  tailwindcss: 3.0.23_qm7bagfnbv4vjkuayu3hle4sne
   tslib: 2.3.1
   typescript: 4.5.5
   vite: 2.8.3
@@ -1243,7 +1243,7 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /svelte-check/2.4.5_postcss@8.4.6+svelte@3.46.4:
+  /svelte-check/2.4.5_7jwy3d7cmqdltluu6ileoi6vt4:
     resolution: {integrity: sha512-nRft8BbG2wcxyCdHDZ7X43xLcvDzua3xLwq6wzHGcAF3ka3Jyhv2rvgq0+SF9NwHLMefp9C2XkM6etzsxK/cMQ==}
     hasBin: true
     peerDependencies:
@@ -1257,7 +1257,7 @@ packages:
       sade: 1.8.1
       source-map: 0.7.3
       svelte: 3.46.4
-      svelte-preprocess: 4.10.3_88b359da5cac6d8f6ee1bbb7080a3fa9
+      svelte-preprocess: 4.10.3_rczvtws4vrwy63xbxo3qqcr7ve
       typescript: 4.5.5
     transitivePeerDependencies:
       - '@babel/core'
@@ -1280,7 +1280,7 @@ packages:
       svelte: 3.46.4
     dev: true
 
-  /svelte-preprocess/4.10.3_88b359da5cac6d8f6ee1bbb7080a3fa9:
+  /svelte-preprocess/4.10.3_rczvtws4vrwy63xbxo3qqcr7ve:
     resolution: {integrity: sha512-ttw17lJfb/dx2ZJT9sesaXT5l7mPQ9Apx1H496Kli3Hkk7orIRGpOw6rCPkRNzr6ueVPqb4vzodS5x7sBFhKHw==}
     engines: {node: '>= 9.11.2'}
     requiresBuild: true
@@ -1337,12 +1337,13 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
-  /tailwindcss/3.0.23_autoprefixer@10.4.2:
+  /tailwindcss/3.0.23_qm7bagfnbv4vjkuayu3hle4sne:
     resolution: {integrity: sha512-+OZOV9ubyQ6oI2BXEhzw4HrqvgcARY38xv3zKcjnWtMIZstEsXdI9xftd1iB7+RbOnj2HOEzkA0OyB5BaSxPQA==}
     engines: {node: '>=12.13.0'}
     hasBin: true
     peerDependencies:
       autoprefixer: ^10.0.2
+      postcss: ^8.0.9
     dependencies:
       arg: 5.0.1
       autoprefixer: 10.4.2_postcss@8.4.6
